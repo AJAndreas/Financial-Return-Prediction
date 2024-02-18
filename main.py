@@ -118,10 +118,10 @@ return_df = feature_eng.lagged_return_momentum(return_df, target_columns, lag_pe
 return_df = return_df.join(target_df, how='left')
 
 """
-We are going to try and predict the sign of the stock return so we need to create a classifier output and to do this we 
+We are going to try and predict the sign of the stock return so we need to frame this task as a classification problem. To do this we 
 will mark positive daily returns as a 1 and negative returns as a 0
 
-The intuition would be that we want to buy a stock if the enxt day's return is positive and our model accurately 
+The intuition would be that we want to buy a stock if the next day's return is positive and our model accurately 
 predicts this
 
 """
@@ -157,12 +157,15 @@ training_data = return_df.loc[:'2020']
 test_data = return_df['2021':"2023"]
 
 # We need to separate our datasets into the dependent and independent variables
-# We are going to do this just for a single ticker at the moment
+# We are going to do this just for a single ticker at the moment but note that 
+# there might be some value in historical data of other real estate stocks, as they will likely be correlated
+# To check this we could look at the autocorrelation between the returns of our target stock and the lagged features of another stock
 
 ticker = unique_tickers[3]
 print(ticker)
+# Setting a random seed to create reproducible results
 seed = 42
-splits = 4
+splits = 5
 
 y_train = training_data[ticker, 'flag']
 x_train = training_data[ticker].drop(columns=['flag', 'One Day Return'])
@@ -181,7 +184,8 @@ model = cb.CatBoostClassifier(custom_loss="Accuracy",
                               iterations=25)
 
 
-"""# Commented out after having run once - saved model is called optimized_model
+# Commented out after having run once as the catboost_search file saves an optimized model 
+# We just load this up with the same parameters going forward to avoid us having to always run a new grid search
 
 # We want to find the optimal parameters for our model using the grid search methodology, but first we specify a
 # set of parameters that we will search over
@@ -190,20 +194,18 @@ param_grid = {'iterations': [50, 100, 150],
         'depth': [2, 4, 6, 8],
         'l2_leaf_reg': [0.2, 0.5, 1, 3]}
 
-# Setting a random seed to create reproducible results
-seed = 42
-splits = 5
-
 ts_tuning = ts_tuning(params=param_grid, seed=seed, splits=splits)
 fitted_model = ts_tuning.search(x_train,
                                 y_train,
-                                model)"""
+                                model)
 
-
+"""
+# Only comment this out once you have a pre-trained model saved 
 optimized_model = cb.CatBoostClassifier()
 optimized_model.load_model('optimized_model')
+"""
 
-y_pred = optimized_model.predict(x_test)
+y_pred = fitted_model.predict(x_test)
 prediction_accuracy = np.sum(np.where(y_pred==y_test, 1, 0))/np.size(y_test)
 print(prediction_accuracy)
 
