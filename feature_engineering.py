@@ -15,7 +15,6 @@ class feature_engineering:
             pd.DataFrame of the resampled data
 
         Note that this would return a new dataframe on the desired resampled timeframe
-        If you are dealing with several different stocks,
         """
 
         monthly_df = pd.DataFrame(index=column_name)
