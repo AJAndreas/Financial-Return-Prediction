@@ -6,8 +6,6 @@ import statsmodels.api as sm
 import sklearn
 from sklearn import metrics
 from sklearn.metrics import make_scorer, accuracy_score
-from sklearn.model_selection import TimeSeriesSplit, GridSearchCV
-import yfinance as yf
 import requests
 import csv
 import talib
@@ -208,19 +206,6 @@ optimized_model.load_model('optimized_model')
 y_pred = optimized_model.predict(x_test)
 prediction_accuracy = np.sum(np.where(y_pred==y_test, 1, 0))/np.size(y_test)
 print(prediction_accuracy)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
