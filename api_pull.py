@@ -31,7 +31,7 @@ class alpha_vantage_data:
     def user_prompt(self):
         """
         First, we want to ask the user to input a list of the tickers that they want to pull
-        Next, we want to sk them over what timeframe we should pull the data (intraday vs. daily)
+        Next, we want to ask them over what timeframe we should pull the data (intraday vs. daily)
             
         :return: list of tickers, timeframe 
         """
@@ -51,7 +51,7 @@ class alpha_vantage_data:
 
     def get_data(self, symbol, timeframe):
 
-        """ Using the Alpha Vantage API to pull in Intraday stock data for the SP500
+        """ Using the Alpha Vantage API to pull in Intraday stock data
 
         symbol: the ticker which you want to pull your data for
         interval: the time interval on which we will be pulling data. Acceptable inputs are as follows:
